@@ -29,7 +29,7 @@ Configuration
 This scripts behaviour can be configured either via the command-line (which
 always takes precedence) or via configuration files, it will parse, in order:
 `/etc/aptcron.conf`, `/etc/aptcron.d/*.conf`, `./aptcron.conf` and
-`./aptcron.d/*.conf`. Files in *.d directories are parsed in alphabetic order.
+`./aptcron.d/*.conf`. Files in `*.d` directories are parsed in alphabetic order.
 
 For now this script has only two configuration directives, here is an example
 configuration file:
@@ -40,6 +40,14 @@ configuration file:
     
     # If set to 'yes', aptcron only lists updates it hasn't seen previously
     only-new: no
+
+By default the the `DEFAULT` section is used, but you can use a different
+section by specifying the `--section` commandline parameter. Note that in this
+case, any settings from the `DEFAULT` section still take precedence over the
+programs defaults.
+
+If you are not happy with the list of config files, specify a single config
+file to be used instead with the `--config` parameter.
 
 Cron configuration
 ------------------
