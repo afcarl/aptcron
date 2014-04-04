@@ -32,6 +32,9 @@ parser.add_argument('--only-new', action='store_true',
 parser.add_argument(
     '--section', default='DEFAULT',
     help="Read section SECTION from the config files (default: %(default)s).")
+parser.add_argument(
+    '--force', action='store_ture',
+    help="Print something even if no packages are found so an email is always sent.")
 parser.add_argument('--config', help="Use an alternative config-file.")
 args = parser.parse_args()
 
@@ -77,6 +80,8 @@ if config.getboolean(args.section, 'only-new') and os.path.exists(SEEN_CACHE):
 
 if packages:
     print("Available updates:")
+elif args.force:
+    print("No packages found.")
 
 for name, new, old in packages:
     print('* %s: %s -> %s' % (name, new, old))
