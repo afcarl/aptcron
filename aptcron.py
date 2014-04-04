@@ -73,6 +73,9 @@ if config.getboolean('DEFAULT', 'only-new') and os.path.exists(SEEN_CACHE):
     seen = pickle.load(open(SEEN_CACHE))
     packages = [p for p in packages if p not in seen]
 
+if packages:
+    print("Available updates:")
+
 for name, new, old in packages:
     print('* %s: %s -> %s' % (name, new, old))
 
