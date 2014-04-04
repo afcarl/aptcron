@@ -5,4 +5,4 @@
 SHELL=/bin/bash
 
 # m h dom mon dow user  command
-0 0     * * *   root    echo aptcron --force | at $(($RANDOM \% 24)):$(($RANDOM \% 60))
+0 0     * * *   root    echo aptcron | at $(($RANDOM \% 24)):$(($RANDOM \% 60)) > /dev/null

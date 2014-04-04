@@ -22,7 +22,7 @@ Package: aptcron-fixed-time
 Architecture: all
 Section: python
 Depends: ${misc:Depends}, ${python:Depends}, aptcron
-Description: Run aptcron at a specific time of day
+Description: Run aptcron at 6:15 am every day
  This package adds a crontab file to run aptcron at 6:15 am.
 
 Package: aptcron-random-time
@@ -31,3 +31,11 @@ Section: python
 Depends: ${misc:Depends}, ${python:Depends}, aptcron
 Description: Run aptcron at a random time of day
  This package adds a crontab file to run aptcron at a random time of day.
+
+Package: aptcron-in-the-morning
+Architecture: all
+Section: python
+Depends: ${misc:Depends}, ${python:Depends}, aptcron
+Description: Run aptcron at a random time between 3:00 am and 8 am.
+ This package adds a crontab file to run aptcron at a random time between
+ 3:00 am and 8 am.
