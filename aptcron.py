@@ -24,7 +24,6 @@ else:
 
 config = configparser.ConfigParser({
     'update': 'yes',
-    'install': 'no',
     'only-new': 'no',
 })
 
@@ -38,16 +37,12 @@ parser = argparse.ArgumentParser(
     description="List APT updates via cron, optionally installing them.")
 parser.add_argument('--no-update', action='store_true',
                     help="Do not update package index before listing updates.")
-parser.add_argument('--install', action='store_true',
-                    help="Install all upgrades as well.")
 parser.add_argument('--only-new', action='store_true',
                     help="Only list new package updates.")
 args = parser.parse_args()
 
 if args.no_update:
     config.set('DEFAULT', 'update', 'no')
-if args.install:
-    config.set('DEFAULT', 'install', 'yes')
 if args.only_new:
     config.set('DEFAULT', 'only-new', 'yes')
 
