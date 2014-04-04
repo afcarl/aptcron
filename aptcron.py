@@ -30,6 +30,7 @@ config = configparser.ConfigParser({
 # add global config files
 configfiles = ['/etc/aptcron.conf', ] + sorted(glob.glob('/etc/aptcron.d/*.conf'))
 configfiles += ['aptcron.conf', ] + sorted(glob.glob('aptcron.d/*.conf'))
+print(configfiles)
 config.read(configfiles)
 
 # cli parser:
