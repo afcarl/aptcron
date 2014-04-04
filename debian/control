@@ -1,0 +1,33 @@
+Source: aptcron
+Section: python
+Priority: extra
+Maintainer: Mathias Ertl <mati@er.tl>
+Build-Depends: debhelper (>= 9)
+Standards-Version: 3.9.5
+Homepage: https://github.com/mathiasertl/aptcron
+X-Python-Version: >= 2.7
+X-Python3-Version: >= 3.2
+Vcs-Browser: https://github.com/mathiasertl/aptcron
+Vcs-Git: https://github.com/mathiasertl/aptcron.git
+
+Package: aptcron
+Architecture: all
+Section: python
+Depends: ${misc:Depends}, ${python:Depends}, python-apt
+Description: List available APT updates
+ List updates available in the APT index. This script is specifically designed
+ to work well with custom deployment on a large scale.
+
+Package: aptcron-fixed-time
+Architecture: all
+Section: python
+Depends: ${misc:Depends}, ${python:Depends}, aptcron
+Description: Run aptcron at a specific time of day
+ This package adds a crontab file to run aptcron at 6:15 am.
+
+Package: aptcron-random-time
+Architecture: all
+Section: python
+Depends: ${misc:Depends}, ${python:Depends}, aptcron
+Description: Run aptcron at a random time of day
+ This package adds a crontab file to run aptcron at a random time of day.
