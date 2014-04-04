@@ -1,37 +1,48 @@
 aptcron
 =======
 
-**aptcron** is a simple script that (optionally) updates your APT index ("apt-get update") and prints all new packages to stdout. It is designed to be run by cron, which should take care of sending out emails to the root-user.
+**aptcron** is a simple script that (optionally) updates your APT index
+("apt-get update") and prints all new packages to stdout. It is designed to be
+run by cron, which should take care of sending out emails to the root-user.
 
-The script, cron-jobs and any configuration can be deployed with APT itself, making it suitable for larger automatic deployments.
+The script, cron-jobs and any configuration can be deployed with APT itself,
+making it suitable for larger automatic deployments.
 
 Requirements
 ------------
 
-**aptcron** is written in Python and runs with Python2.7+, including Python3.2+. The only library required is python-apt, which you can install with `apt get install python-apt` (or python3-apt).
+**aptcron** is written in Python and runs with Python2.7+, including
+Python3.2+. The only library required is python-apt, which you can install with
+`apt get install python-apt` (or python3-apt).
 
 Installation
 ------------
 
 APT-repositories for the package will be available very soon.
 
-If you want to upload a Debian package to your own custom APT repository, this repository is ready to be built with `git-buildpackage`. 
+If you want to upload a Debian package to your own custom APT repository, this
+repository is ready to be built with `git-buildpackage`. 
 
 Configuration
 -------------
 
-This scripts behaviour can be configured either via the command-line (which always takes precedence) or via configuration files, it will parse, in order: /etc/aptcron.conf, /etc/aptcron.d/*.conf, ./aptcron.conf and ./aptcron.d/*.conf. Files in *.d directories are parsed in alphabetic order.
+This scripts behaviour can be configured either via the command-line (which
+always takes precedence) or via configuration files, it will parse, in order:
+`/etc/aptcron.conf`, `/etc/aptcron.d/*.conf`, `./aptcron.conf` and
+`./aptcron.d/*.conf`. Files in *.d directories are parsed in alphabetic order.
 
-For now this script has only two configuration directives, here is an example configuration file:
+For now this script has only two configuration directives, here is an example
+configuration file:
 
     [DEFAULT]
-    # If set to 'no', aptcron will not update the package index before listing packages:
+    # If set to 'no', aptcron won't update the index before listing packages:
     update: yes
     
-    # If set to 'yes', aptcron will only list packages it hasn't seen in the previous run:
+    # If set to 'yes', aptcron only lists updates it hasn't seen previously
     only-new: no
 
 Cron configuration
 ------------------
 
-**aptcron** is designed to be run by cron. The `debian/` directory includes the cron.d-files installed by the `aptcron-*-time` packages.
+**aptcron** is designed to be run by cron. The `debian/` directory includes the
+cron.d-files installed by the `aptcron-*-time` packages.
