@@ -42,6 +42,7 @@ args = parser.parse_args()
 config = configparser.ConfigParser({
     'update': 'yes',
     'only-new': 'no',
+    'force': 'no',
 })
 if args.config:
     configfiles = [args.config]
@@ -55,6 +56,8 @@ if args.no_update:
     config.set(args.section, 'update', 'no')
 if args.only_new:
     config.set(args.section, 'only-new', 'yes')
+if args.force:
+    config.set(args.section, 'force', 'yes')
 
 if os.getuid() != 0:
     print("aptcron requires root-privileges to run.", file=sys.stderr)
@@ -80,7 +83,7 @@ if config.getboolean(args.section, 'only-new') and os.path.exists(SEEN_CACHE):
 
 if packages:
     print("Available updates:")
-elif args.force:
+elif config.getboolean(args.section, 'force'):
     print("No packages found.")
 
 for name, new, old in packages:
