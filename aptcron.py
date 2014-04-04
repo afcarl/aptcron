@@ -33,7 +33,7 @@ parser.add_argument(
     '--section', default='DEFAULT',
     help="Read section SECTION from the config files (default: %(default)s).")
 parser.add_argument(
-    '--force', action='store_ture',
+    '--force', action='store_true',
     help="Print something even if no packages are found so an email is always sent.")
 parser.add_argument('--config', help="Use an alternative config-file.")
 args = parser.parse_args()
