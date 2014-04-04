@@ -1,2 +1,0 @@
-SHELL=/bin/bash
-6 15     * * *   root    at -f /usr/bin/touch $(($RANDOM \% 24)):$(($RANDOM \% 60))
