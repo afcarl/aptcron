@@ -15,6 +15,9 @@ Requirements
 Python3.2+. The only library required is python-apt, which you can install with
 `apt get install python-apt` (or python3-apt).
 
+The script relies on cron sending out emails with the output of cronjobs, so
+your server needs to be configured for that.
+
 Installation
 ------------
 
