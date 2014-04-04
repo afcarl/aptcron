@@ -28,8 +28,8 @@ config = configparser.ConfigParser({
 })
 
 # add global config files
-configfiles = ['/etc/aptcron.conf', ] + glob.glob('/etc/aptcron.d/*.conf')
-configfiles += ['aptcron.conf', ] + glob.glob('aptcron.d/*.conf')
+configfiles = ['/etc/aptcron.conf', ] + sorted(glob.glob('/etc/aptcron.d/*.conf'))
+configfiles += ['aptcron.conf', ] + sorted(glob.glob('aptcron.d/*.conf'))
 config.read(configfiles)
 
 # cli parser:
