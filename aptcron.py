@@ -4,16 +4,24 @@ from __future__ import print_function
 
 import argparse
 import os
+import pickle
 import sys
 
 import apt
 
+# constants:
+CACHE_DIR = '/var/cache/aptcron'
+SEEN_CACHE = '%s/seen' % CACHE_DIR
+
+# cli parser:
 parser = argparse.ArgumentParser(
     description="List APT updates via cron, optionally installing them.")
 parser.add_argument('--no-update', dest='update', default=True, action='store_false',
                     help="Do not update package index before listing updates.")
 parser.add_argument('--install', default=False, action='store_true',
                     help="Install all upgrades as well.")
+parser.add_argument('--only-new', default=False, action='store_true',
+                    help="Only list new package updates.")
 args = parser.parse_args()
 
 if os.getuid() != 0:
@@ -23,12 +31,25 @@ if os.getuid() != 0:
 # initialize cache:
 cache=apt.Cache()
 
-# update the APT cache.
+# update the APT cache:
 if args.update:
     cache.update()
 
 # list upgradeable packages
 cache.open(None)
 cache.upgrade()
-for pkg in cache.get_changes():
-    print('* %s: %s -> %s' % (pkg.name, pkg.versions[1].version, pkg.versions[0].version))
+
+packages = [(p.name, p.versions[1].version, p.versions[0].version) for p in cache.get_changes()]
+
+seen = []
+if args.only_new and os.path.exists(SEEN_CACHE):
+    seen = pickle.load(open(SEEN_CACHE))
+    packages = [p for p in packages if p not in seen]
+
+for name, new, old in packages:
+    print('* %s: %s -> %s' % (name, new, old))
+
+if args.only_new:
+    if not os.path.exists(CACHE_DIR):
+        os.makedirs(CACHE_DIR)
+    pickle.dump(seen + packages, open(SEEN_CACHE, 'w'))
