@@ -28,8 +28,8 @@ hostname = socket.gethostname()
 # Parse command line arguments:
 parser = argparse.ArgumentParser(
     description="List APT updates via cron, optionally installing them.")
-parser.add_argument('--no-update', action='store_true',
-                    help="Do not update package index before listing updates.")
+parser.add_argument('--update', choices=['yes', 'no'],
+                    help='Wether to update the package index (default: yes).')
 parser.add_argument('--only-new', action='store_true',
                     help="Only list new package updates.")
 parser.add_argument(
@@ -48,7 +48,7 @@ mail_parser.add_argument('--mail-to', metavar='TO',
                          help='The To: header used (default: root@%s).' % hostname)
 mail_parser.add_argument('--mail-subject', metavar='SUBJECT', help='The subject used.')
 
-smtp_parser = parser.add_argument_group('SMTP', 'SMTP-related options')
+smtp_parser = parser.add_argument_group('SMTP', 'SMTP-related options.')
 smtp_parser.add_argument('--smtp-host', metavar='HOST',
                          help='The SMTP server to use (default: localhost).')
 smtp_parser.add_argument('--smtp-port', metavar='PORT',
@@ -63,15 +63,21 @@ smtp_parser.add_argument('--smtp-starttls', choices=['no', 'yes', 'force'],
 
 args = parser.parse_args()
 
+# context for string formatting:
+context = {
+    'host': hostname,
+    'shorthost': hostname.split('.')[0],
+}
+
 # Read configuration files:
 config = configparser.ConfigParser({
     'update': 'yes',
     'only-new': 'no',
     'force': 'no',
 
-    'mail-from': '',
-    'mail-to': '',
-    'mail-subject': '',
+    'mail-from': 'root@%s' % hostname,
+    'mail-to': 'root@%s' % hostname,
+    'mail-subject': '[aptcron] {shorthost}: {num} APT updates',
 
     'smtp-host': 'localhost',
     'smtp-port': '25',
@@ -110,6 +116,7 @@ cache.open(None)
 cache.upgrade()
 
 packages = [(p.name, p.versions[1].version, p.versions[0].version) for p in cache.get_changes()]
+context['num'] = len(packages)  # update context with number of updates
 
 seen = []
 if config.getboolean(args.section, 'only-new') and os.path.exists(SEEN_CACHE):
