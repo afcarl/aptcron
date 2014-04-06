@@ -7,7 +7,11 @@ import glob
 import os
 import pickle
 import socket
+import smtplib
 import sys
+import StringIO
+
+from email.mime.text import MIMEText
 
 import apt
 
@@ -121,41 +125,74 @@ if args.smtp_password:
 if args.smtp_starttls:
     config.set(args.section, 'smtp-starttls', args.smtp_starttls)
 
-if os.getuid() != 0:
-    print("aptcron requires root-privileges to run.", file=sys.stderr)
-    sys.exit(1)
-
-# initialize cache:
-cache=apt.Cache()
-
-# update the APT cache:
-if not config.getboolean(args.section, 'no-update'):
-    cache.update()
-
-# list upgradeable packages
-cache.open(None)
-cache.upgrade()
-
-packages = [(p.name, p.versions[1].version, p.versions[0].version) for p in cache.get_changes()]
-context['num'] = len(packages)  # update context with number of updates
-
-seen = []
-if config.getboolean(args.section, 'only-new') and os.path.exists(SEEN_CACHE):
-    seen = pickle.load(open(SEEN_CACHE))
-    packages = [p for p in packages if p not in seen]
-
-if packages:
-    print("Available updates:")
-elif config.getboolean(args.section, 'force'):
-    print("No packages found.")
-
-for name, new, old in packages:
-    print('* %s: %s -> %s' % (name, new, old))
-
-if config.getboolean(args.section, 'only-new'):
-    if not os.path.exists(CACHE_DIR):
-        os.makedirs(CACHE_DIR)
-    if context['num'] == 0 and os.path.exists(SEEN_CACHE):  # no new packages at all!
-        os.remove(SEEN_CACHE)
+def send_mail(config, args, stdout, stderr, context, code=0):
+    if args.no_mail:
+        print(sys.stdout.getvalue().strip(), file=stdout)
     else:
-        pickle.dump(seen + packages, open(SEEN_CACHE, 'w'))
+        msg = MIMEText(sys.stdout.getvalue())
+        msg['Subject'] = config.get(args.section, 'mail-subject').format(**context)
+        msg['From'] = config.get(args.section, 'mail-from').format(**context)
+        msg['To'] = config.get(args.section, 'mail-to').format(**context)
+        msg['X-AptCron'] = 'yes'
+        msg['X-AptCron-Host'] = context['host']
+
+        print(msg.as_string(), file=stdout)
+
+        s = smtplib.SMTP(config.get(args.section, 'smtp-host'),
+                         config.getint(args.section, 'smtp-port'))
+        s.sendmail(msg['From'], [msg['To']], msg.as_string())
+        s.quit()
+
+    sys.exit(code)
+
+_stdout = sys.stdout
+_stderr = sys.stderr
+sys.stdout = StringIO.StringIO()
+sys.stderr = sys.stdout
+
+if os.getuid() != 0:
+    print("aptcron requires root-privileges to run.")
+    send_mail(config, args, _stdout, _stderr, context, code=1)
+
+try:
+    # initialize cache:
+    cache=apt.Cache()
+
+    # update the APT cache:
+    if not config.getboolean(args.section, 'no-update'):
+        cache.update()
+
+    # list upgradeable packages
+    cache.open(None)
+    cache.upgrade()
+
+    packages = [(p.name, p.versions[1].version, p.versions[0].version) for p in cache.get_changes()]
+    context['num'] = len(packages)  # update context with number of updates
+
+    seen = []
+    if config.getboolean(args.section, 'only-new') and os.path.exists(SEEN_CACHE):
+        seen = pickle.load(open(SEEN_CACHE))
+        packages = [p for p in packages if p not in seen]
+
+    if packages:
+        print("Available updates:")
+    elif config.getboolean(args.section, 'force'):
+        print("No packages found.")
+
+    for name, new, old in packages:
+        print('* %s: %s -> %s' % (name, new, old))
+
+    if config.getboolean(args.section, 'only-new'):
+        if not os.path.exists(CACHE_DIR):
+            os.makedirs(CACHE_DIR)
+        if context['num'] == 0 and os.path.exists(SEEN_CACHE):  # no new packages at all!
+            os.remove(SEEN_CACHE)
+        else:
+            pickle.dump(seen + packages, open(SEEN_CACHE, 'w'))
+
+    # finally send a mail on success
+    send_mail(config, args, _stdout, _stderr, context)
+except Exception as e:
+    print('%s: %s' % (type(e).__name__, e))
+    print('%s: %s' % (type(e).__name__, e), file=_stdout)
+    send_mail(config, args, _stdout, _stderr, context, code=1)
