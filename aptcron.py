@@ -6,6 +6,7 @@ import argparse
 import glob
 import os
 import pickle
+import socket
 import sys
 
 import apt
@@ -22,6 +23,8 @@ if PY3:
 else:
     import ConfigParser as configparser
 
+hostname = socket.gethostname()
+
 # Parse command line arguments:
 parser = argparse.ArgumentParser(
     description="List APT updates via cron, optionally installing them.")
@@ -36,6 +39,28 @@ parser.add_argument(
     '--force', action='store_true',
     help="Print something even if no packages are found so an email is always sent.")
 parser.add_argument('--config', help="Use an alternative config-file.")
+
+mail_parser = parser.add_argument_group(
+    'E-Mail', 'Configure how the E-Mail you will receive looks like.')
+mail_parser.add_argument('--mail-from', metavar='FROM',
+                         help='The From: header used (default: root@%s).' % hostname)
+mail_parser.add_argument('--mail-to', metavar='TO',
+                         help='The To: header used (default: root@%s).' % hostname)
+mail_parser.add_argument('--mail-subject', metavar='SUBJECT', help='The subject used.')
+
+smtp_parser = parser.add_argument_group('SMTP', 'SMTP-related options')
+smtp_parser.add_argument('--smtp-host', metavar='HOST',
+                         help='The SMTP server to use (default: localhost).')
+smtp_parser.add_argument('--smtp-port', metavar='PORT',
+                         help='The SMTP port to use (default: 25).')
+smtp_parser.add_argument('--smtp-user', metavar='USER',
+                         help='The SMTP user to use (default: no user).')
+smtp_parser.add_argument('--smtp-password', metavar='PWD',
+                         help='The SMTP password to use (default: no password).')
+smtp_parser.add_argument('--smtp-starttls', choices=['no', 'yes', 'force'],
+    help='Wether to use STARTTLS. "yes" will use it if available, "force" will fail if STARTTLS '
+         'is not available (default: force).')
+
 args = parser.parse_args()
 
 # Read configuration files:
@@ -43,6 +68,16 @@ config = configparser.ConfigParser({
     'update': 'yes',
     'only-new': 'no',
     'force': 'no',
+
+    'mail-from': '',
+    'mail-to': '',
+    'mail-subject': '',
+
+    'smtp-host': 'localhost',
+    'smtp-port': '25',
+    'smtp-user': '',
+    'smtp-password': '',
+    'smtp-starttls': 'force',
 })
 if args.config:
     configfiles = [args.config]
