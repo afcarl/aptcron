@@ -150,6 +150,11 @@ def send_mail(config, args, stdout, stderr, context, code=0):
                     if starttls == 'force':
                         raise RuntimeError("STARTTLS forced but not supported by SMTP-server.")
 
+            user = config.get(args.section, 'smtp-user')
+            password = config.get(args.section, 'smtp-password')
+            if user and password:
+                s.login(user, password)
+
             s.sendmail(msg['From'], [msg['To']], msg.as_string())
             s.quit()
         except Exception as e:
