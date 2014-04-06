@@ -141,6 +141,15 @@ def send_mail(config, args, stdout, stderr, context, code=0):
 
             s = smtplib.SMTP(config.get(args.section, 'smtp-host'),
                              config.getint(args.section, 'smtp-port'))
+
+            starttls = config.get(args.section, 'smtp-starttls')
+            if starttls in ('yes', 'force', ):
+                try:
+                    s.starttls()
+                except smtplib.SMTPException:
+                    if starttls == 'force':
+                        raise RuntimeError("STARTTLS forced but not supported by SMTP-server.")
+
             s.sendmail(msg['From'], [msg['To']], msg.as_string())
             s.quit()
         except Exception as e:
@@ -197,6 +206,8 @@ try:
             os.remove(SEEN_CACHE)
         else:
             pickle.dump(seen + packages, open(SEEN_CACHE, 'w'))
+
+    print("\nPlease update all packages at your earliest convenience.")
 
     # finally send a mail on success
     send_mail(config, args, _stdout, _stderr, context)
