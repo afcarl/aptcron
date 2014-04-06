@@ -129,19 +129,23 @@ def send_mail(config, args, stdout, stderr, context, code=0):
     if args.no_mail:
         print(sys.stdout.getvalue().strip(), file=stdout)
     else:
-        msg = MIMEText(sys.stdout.getvalue())
-        msg['Subject'] = config.get(args.section, 'mail-subject').format(**context)
-        msg['From'] = config.get(args.section, 'mail-from').format(**context)
-        msg['To'] = config.get(args.section, 'mail-to').format(**context)
-        msg['X-AptCron'] = 'yes'
-        msg['X-AptCron-Host'] = context['host']
+        try:
+            msg = MIMEText(sys.stdout.getvalue().strip())
+            msg['Subject'] = config.get(args.section, 'mail-subject').format(**context)
+            msg['From'] = config.get(args.section, 'mail-from').format(**context)
+            msg['To'] = config.get(args.section, 'mail-to').format(**context)
+            msg['X-AptCron'] = 'yes'
+            msg['X-AptCron-Host'] = context['host']
 
-        print(msg.as_string(), file=stdout)
+            print(msg.as_string(), file=stdout)
 
-        s = smtplib.SMTP(config.get(args.section, 'smtp-host'),
-                         config.getint(args.section, 'smtp-port'))
-        s.sendmail(msg['From'], [msg['To']], msg.as_string())
-        s.quit()
+            s = smtplib.SMTP(config.get(args.section, 'smtp-host'),
+                             config.getint(args.section, 'smtp-port'))
+            s.sendmail(msg['From'], [msg['To']], msg.as_string())
+            s.quit()
+        except Exception as e:
+            print('%s: %s' % (type(e).__name__, e), file=stderr)
+            code = 2
 
     sys.exit(code)
 
@@ -198,5 +202,4 @@ try:
     send_mail(config, args, _stdout, _stderr, context)
 except Exception as e:
     print('%s: %s' % (type(e).__name__, e))
-    print('%s: %s' % (type(e).__name__, e), file=_stdout)
     send_mail(config, args, _stdout, _stderr, context, code=1)
