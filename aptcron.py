@@ -28,16 +28,18 @@ hostname = socket.gethostname()
 # Parse command line arguments:
 parser = argparse.ArgumentParser(
     description="List APT updates via cron, optionally installing them.")
-parser.add_argument('--no-update',
+parser.add_argument('--no-update', action='store_true',
                     help='Do not update the package index.')
 parser.add_argument('--only-new', action='store_true',
                     help="Only list new package updates.")
-parser.add_argument(
-    '--section', default='DEFAULT',
-    help="Read section SECTION from the config files (default: %(default)s).")
+parser.add_argument('--no-mail', action='store_true',
+                    help="Do not send mail, just print to stdout/stderr.")
 parser.add_argument(
     '--force', action='store_true',
     help="Print something even if no packages are found so an email is always sent.")
+parser.add_argument(
+    '--section', default='DEFAULT',
+    help="Read section SECTION from the config files (default: %(default)s).")
 parser.add_argument('--config', help="Use an alternative config-file.")
 
 mail_parser = parser.add_argument_group(
@@ -74,6 +76,7 @@ config = configparser.ConfigParser({
     'no-update': 'no',
     'only-new': 'no',
     'force': 'no',
+    'no-mail': 'no',
 
     'mail-from': 'root@%s' % hostname,
     'mail-to': 'root@%s' % hostname,
@@ -99,6 +102,8 @@ if args.only_new:
     config.set(args.section, 'only-new', 'yes')
 if args.force:
     config.set(args.section, 'force', 'yes')
+if args.no_mail:
+    config.set(args.section, 'no-mail', 'yes')
 
 if os.getuid() != 0:
     print("aptcron requires root-privileges to run.", file=sys.stderr)
