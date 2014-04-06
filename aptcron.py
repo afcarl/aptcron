@@ -134,4 +134,7 @@ for name, new, old in packages:
 if config.getboolean(args.section, 'only-new'):
     if not os.path.exists(CACHE_DIR):
         os.makedirs(CACHE_DIR)
-    pickle.dump(seen + packages, open(SEEN_CACHE, 'w'))
+    if context['num'] == 0 and os.path.exists(SEEN_CACHE):  # no new packages at all!
+        os.remove(SEEN_CACHE)
+    else:
+        pickle.dump(seen + packages, open(SEEN_CACHE, 'w'))
