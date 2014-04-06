@@ -15,8 +15,8 @@ Requirements
 Python3.2+. The only library required is python-apt, which you can install with
 `apt get install python-apt` (or python3-apt).
 
-The script relies on cron sending out emails with the output of cronjobs, so
-your server needs to be configured for that.
+The script sends out E-Mails with available updates (this is its primary
+purpose, after all), so you need an SMTP-server available.
 
 Installation
 ------------
@@ -34,15 +34,39 @@ always takes precedence) or via configuration files, it will parse, in order:
 `/etc/aptcron.conf`, `/etc/aptcron.d/*.conf`, `./aptcron.conf` and
 `./aptcron.d/*.conf`. Files in `*.d` directories are parsed in alphabetic order.
 
-For now this script has only two configuration directives, here is an example
-configuration file:
+All configuration can be given in the config files or via the command-line,
+where they have to be prefixed with `--`. The script runs fine without any
+configuration directive at all, if you are happy with the defaults. The
+syntax and defaults can be seen in this example:
 
     [DEFAULT]
-    # If set to 'no', aptcron won't update the index before listing packages:
-    update: yes
-    
-    # If set to 'yes', aptcron only lists updates it hasn't seen previously
+    # If set to 'yes', aptcron won't update the index:
+    no-update: no
+    # If set to 'yes', aptcron only lists updates it hasn't seen previously:
     only-new: no
+    # Do not send mail, just print to stdout:
+    no-mail: yes
+    # Set to "yes" to send an E-Mail even if no packages are found:
+    force: no
+
+    # E-Mail: Configure how the E-Mail you will receive looks like.
+    # The From: header used (default: root@{host}).
+    mail-from: root@{host}
+    # The To: header used (default: root@{host}).
+    mail-to: root@{host}
+    # The subject used.
+    mail-subject: [aptcron] {shorthost}: {num} APT updates
+
+    # SMTP: SMTP-related options.
+    # The SMTP server/port:
+    smtp-host: localhost
+    smtp-port: 25
+    # SMTP user/password (default: no authentication):
+    smtp-user: 
+    smtp-password:
+    # Wether to use STARTTLS. Set to "yes" to use it if available, "force" will fail
+    # if STARTTLS is not available, "no" will not use STARTTLS at all:
+    smtp-starttls: force
 
 By default the the `DEFAULT` section is used, but you can use a different
 section by specifying the `--section` commandline parameter. Note that in this
