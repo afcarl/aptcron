@@ -207,7 +207,8 @@ try:
         else:
             pickle.dump(seen + packages, open(SEEN_CACHE, 'w'))
 
-    print("\nPlease update all packages at your earliest convenience.")
+    if packages:
+        print("\nPlease update all packages at your earliest convenience.")
 
     # finally send a mail on success
     send_mail(config, args, _stdout, _stderr, context)
