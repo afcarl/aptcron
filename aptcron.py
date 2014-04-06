@@ -53,7 +53,7 @@ mail_parser.add_argument('--mail-subject', metavar='SUBJECT', help='The subject 
 smtp_parser = parser.add_argument_group('SMTP', 'SMTP-related options.')
 smtp_parser.add_argument('--smtp-host', metavar='HOST',
                          help='The SMTP server to use (default: localhost).')
-smtp_parser.add_argument('--smtp-port', metavar='PORT',
+smtp_parser.add_argument('--smtp-port', metavar='PORT', type=int,
                          help='The SMTP port to use (default: 25).')
 smtp_parser.add_argument('--smtp-user', metavar='USER',
                          help='The SMTP user to use (default: no user).')
