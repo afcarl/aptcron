@@ -28,8 +28,8 @@ hostname = socket.gethostname()
 # Parse command line arguments:
 parser = argparse.ArgumentParser(
     description="List APT updates via cron, optionally installing them.")
-parser.add_argument('--update', choices=['yes', 'no'],
-                    help='Wether to update the package index (default: yes).')
+parser.add_argument('--no-update',
+                    help='Do not update the package index.')
 parser.add_argument('--only-new', action='store_true',
                     help="Only list new package updates.")
 parser.add_argument(
@@ -71,7 +71,7 @@ context = {
 
 # Read configuration files:
 config = configparser.ConfigParser({
-    'update': 'yes',
+    'no-update': 'no',
     'only-new': 'no',
     'force': 'no',
 
@@ -94,7 +94,7 @@ config.read(configfiles)
 
 # Overrides anything settings given at the command line:
 if args.no_update:
-    config.set(args.section, 'update', 'no')
+    config.set(args.section, 'no-update', 'yes')
 if args.only_new:
     config.set(args.section, 'only-new', 'yes')
 if args.force:
@@ -108,7 +108,7 @@ if os.getuid() != 0:
 cache=apt.Cache()
 
 # update the APT cache:
-if config.getboolean(args.section, 'update'):
+if not config.getboolean(args.section, 'no-update'):
     cache.update()
 
 # list upgradeable packages
