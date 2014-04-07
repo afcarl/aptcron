@@ -27,7 +27,7 @@ if PY3:
 else:
     import ConfigParser as configparser
 
-hostname = socket.gethostname()
+hostname = socket.getfqdn()
 
 # Parse command line arguments:
 parser = argparse.ArgumentParser(
