@@ -130,7 +130,11 @@ def send_mail(config, args, stdout, stderr, context, code=0):
         print(sys.stdout.getvalue().strip(), file=stdout)
     else:
         try:
-            msg = MIMEText(sys.stdout.getvalue().strip())
+            body = sys.stdout.getvalue().strip()
+            if not body:
+                return
+
+            msg = MIMEText(body)
             msg['Subject'] = config.get(args.section, 'mail-subject').format(**context)
             msg['From'] = config.get(args.section, 'mail-from').format(**context)
             msg['To'] = config.get(args.section, 'mail-to').format(**context)
