@@ -126,6 +126,7 @@ if args.smtp_starttls:
     config.set(args.section, 'smtp-starttls', args.smtp_starttls)
 
 def send_mail(config, args, stdout, stderr, context, code=0):
+    # Actually send mail
     if args.no_mail:
         print(sys.stdout.getvalue().strip(), file=stdout)
     else:
@@ -165,6 +166,7 @@ def send_mail(config, args, stdout, stderr, context, code=0):
 
     sys.exit(code)
 
+# we wrap stdout/stderr to our own buffer so that any exceptions are caught
 _stdout = sys.stdout
 _stderr = sys.stderr
 sys.stdout = StringIO.StringIO()
