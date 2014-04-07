@@ -141,8 +141,6 @@ def send_mail(config, args, stdout, stderr, context, code=0):
             msg['X-AptCron'] = 'yes'
             msg['X-AptCron-Host'] = context['host']
 
-            print(msg.as_string(), file=stdout)
-
             s = smtplib.SMTP(config.get(args.section, 'smtp-host'),
                              config.getint(args.section, 'smtp-port'))
 
