@@ -198,10 +198,10 @@ try:
 
     if packages:
         if config.getboolean(args.section, 'only-new') and seen:
-            print("{num} available update(s), new since the last mail:".format(
+            print("{num} available update(s), new since the last mail:\n".format(
                   num=context['num']))
         else:
-            print("{num} available update(s):".format(num=context['num']))
+            print("{num} available update(s):\n".format(num=context['num']))
     elif config.getboolean(args.section, 'force'):
         print("No packages found.")
 
