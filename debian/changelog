@@ -1,3 +1,9 @@
+aptcron (0.0.3) unstable; urgency=low
+  
+  * Fix random minutes in cron-jobs.
+
+ -- Mathias Ertl <mati@er.tl>  Wed, 09 Apr 2014 10:44:28 +0200
+
 aptcron (0.0.2) unstable; urgency=low
   
   * Use socket.getfqdn() instead of gethostname().
