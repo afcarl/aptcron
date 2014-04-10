@@ -2,6 +2,7 @@ aptcron (0.0.4) unstable; urgency=low
   
   * Packages with random-time cron-jobs now depend on at.
   * Random-time cron-jobs pipe output to stderr, making them silent.
+  * Add the aptcron-only-new package.
 
  -- Mathias Ertl <mati@er.tl>  Thu, 10 Apr 2014 13:14:32 +0200
 

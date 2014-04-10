@@ -39,3 +39,12 @@ Depends: ${misc:Depends}, ${python:Depends}, aptcron, at
 Description: Run aptcron at a random time between 3:00 am and 8 am.
  This package adds a crontab file to run aptcron at a random time between
  3:00 am and 8 am.
+
+Package: aptcron-only-new
+Architecture: all
+Section: python
+Depends: ${misc:Depends}, ${python:Depends}, aptcron
+Description: Configure aptcron to only send updates of new packages
+ With this package, aptcron will send only updates of new packages. This means
+ that you will not receive a mail if there are no new updates since the last
+ run.
