@@ -37,6 +37,8 @@ This scripts behaviour can be configured either via the command-line (which
 always takes precedence) or via configuration files, it will parse, in order:
 `/etc/aptcron.conf`, `/etc/aptcron.d/*.conf`, `./aptcron.conf` and
 `./aptcron.d/*.conf`. Files in `*.d` directories are parsed in alphabetic order.
+**aptcron** will merge all configuration files together, so you can split your
+configuration into as many files as you like.
 
 All configuration can be given in the config files or via the command-line,
 where they have to be prefixed with `--`. The script runs fine without any
