@@ -6,12 +6,17 @@ import argparse
 import glob
 import os
 import pickle
+import random
 import socket
 import smtplib
 import sys
 import StringIO
 
+from datetime import datetime
+from datetime import timedelta
 from email.mime.text import MIMEText
+from subprocess import PIPE
+from subprocess import Popen
 
 import apt
 
@@ -45,6 +50,9 @@ parser.add_argument(
     '--section', default='DEFAULT',
     help="Read section SECTION from the config files (default: %(default)s).")
 parser.add_argument('--config', help="Use an alternative config-file.")
+parser.add_argument(
+    '--random', nargs='?', const='0:00-23:59',
+    help="Do not launch %(prog)s now, but in a random time.")
 
 mail_parser = parser.add_argument_group(
     'E-Mail', 'Configure how the E-Mail you will receive looks like.')
@@ -66,11 +74,11 @@ smtp_parser.add_argument('--smtp-password', metavar='PWD',
 smtp_parser.add_argument('--smtp-starttls', choices=['no', 'yes', 'force'],
     help='Wether to use STARTTLS. "yes" will use it if available, "force" will fail if STARTTLS '
          'is not available (default: force).')
-
 args = parser.parse_args()
 
 # context for string formatting:
 context = {
+    'num': 'unknown',
     'host': hostname,
     'shorthost': hostname.split('.')[0],
 }
@@ -91,6 +99,8 @@ config = configparser.ConfigParser({
     'smtp-user': '',
     'smtp-password': '',
     'smtp-starttls': 'force',
+
+    'random': '',
 })
 if args.config:
     configfiles = [args.config]
@@ -106,6 +116,12 @@ for key, value in cli_args.items():
         config.set(args.section, key.replace('_', '-'), 'yes')
     else:
         config.set(args.section, key.replace('_', '-'), value)
+
+def timerange(start, end):
+    stamp = start
+    while stamp <= end:
+        yield stamp
+        stamp = stamp + timedelta(minutes=1)
 
 def send_mail(config, args, stdout, stderr, context, code=0):
     # Actually send mail
@@ -157,6 +173,45 @@ sys.stderr = sys.stdout
 if os.getuid() != 0:
     print("aptcron requires root-privileges to run.")
     send_mail(config, args, _stdout, _stderr, context, code=1)
+
+random_timerange = config.get(args.section, 'random')
+if random_timerange:
+    now = datetime.now().replace(second=0, microsecond=0)
+    start = now.replace(minute=now.minute + 3)
+    end = now.replace(hour=23, minute=59)
+
+    try:
+        start_range, end_range = config.get(args.section, 'random').split('-')
+
+        if start_range:
+            start = datetime.strptime(start_range, '%H:%M')
+            start = now.replace(hour=start.hour, minute=start.minute)
+            if start < now:
+                start = start.replace(minute=now.minute + 3)
+        if end_range:
+            end = datetime.strptime(end_range, '%H:%M')
+            end = now.replace(hour=end.hour, minute=end.minute)
+            if end < start:
+                end = now.replace(hour=23, minute=59)
+        print(0, file=_stdout)
+    except Exception as e:
+        print('%s: %s' % (type(e).__name__, e), file=_stderr)
+        print('%s: Could not parse time range.' % random_timerange)
+        send_mail(config, args, _stdout, _stderr, context, code=2)
+
+    random.seed()
+    time = random.choice(list(timerange(start, end)))
+
+    aptcron = [parser.prog]
+    cli_args = [('--%s' % k.replace('_', '-'), v) for k, v in vars(args).items()
+                if k != 'random' and v != parser.get_default(k)]
+    [aptcron.extend(arg) for arg in cli_args]
+
+    p = Popen(['at', time.strftime('%H:%M')], stdin=PIPE, stdout=PIPE, stderr=PIPE)
+    print(' '.join(aptcron), file=_stdout)
+    stdout, stderr = p.communicate(input=' '.join(aptcron))
+
+    sys.exit(0)
 
 try:
     # initialize cache:
