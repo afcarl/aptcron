@@ -1,12 +1,16 @@
 aptcron
 =======
 
-**aptcron** is a simple script that (optionally) updates your APT index
-("apt-get update") and prints all new packages to stdout. It is designed to be
-run by cron, which should take care of sending out emails to the root-user.
+**aptcron** is a simple script that sends out E-Mails of available updates in
+your APT index. It is designed to be fully configurable via files in the
+`/etc/aptcron.d/` directory, so you can easily deploy configuration via your own
+Debian packages.
 
-The script, cron-jobs and any configuration can be deployed with APT itself,
-making it suitable for larger automatic deployments.
+Configuration options include:
+
+* Update your APT index before creating the list of updates.
+* Only list updates it hasn't already seen in the previous run.
+* Use an external SMTP mail server (including authentication and STARTTLS)
 
 Requirements
 ------------
