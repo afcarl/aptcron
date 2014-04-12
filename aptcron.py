@@ -134,7 +134,11 @@ def send_mail(config, args, stdout, stderr, context, code=0):
                 return
 
             msg = MIMEText(body)
-            msg['Subject'] = config.get(args.section, 'mail-subject').format(**context)
+            if code == 0:
+                msg['Subject'] = config.get(args.section, 'mail-subject').format(**context)
+            else:
+                subj = '[aptcron] {shorthost}: Error while checking for updates'.format(**context)
+                msg['Subject'] = subj
             msg['From'] = config.get(args.section, 'mail-from').format(**context)
             msg['To'] = config.get(args.section, 'mail-to').format(**context)
             msg['X-AptCron'] = 'yes'
