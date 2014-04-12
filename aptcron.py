@@ -51,8 +51,9 @@ parser.add_argument(
     help="Read section SECTION from the config files (default: %(default)s).")
 parser.add_argument('--config', help="Use an alternative config-file.")
 parser.add_argument(
-    '--random', nargs='?', const='0:00-23:59',
-    help="Do not launch %(prog)s now, but in a random time.")
+    '--random', metavar='TIMERANGE', nargs='?', const='0:00-23:59',
+    help="Launch %(prog)s sometime in the given TIMERANGE, e.g. '2:00-8:00'. If TIMERANGE is 'no', "
+         "execute right away, overriding configuration files.")
 
 mail_parser = parser.add_argument_group(
     'E-Mail', 'Configure how the E-Mail you will receive looks like.')
@@ -179,7 +180,7 @@ if os.getuid() != 0:
     send_mail(config, args, _stdout, _stderr, context, code=1)
 
 random_timerange = config.get(args.section, 'random')
-if random_timerange:
+if random_timerange and random_timerange.lower().strip() != 'no':
     now = datetime.now().replace(second=0, microsecond=0)
     start = now.replace(minute=now.minute + 3)
     end = now.replace(hour=23, minute=59)
