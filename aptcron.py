@@ -99,31 +99,13 @@ else:
     configfiles += ['aptcron.conf', ] + sorted(glob.glob('aptcron.d/*.conf'))
 config.read(configfiles)
 
-# Overrides anything settings given at the command line:
-if args.no_update:
-    config.set(args.section, 'no-update', 'yes')
-if args.only_new:
-    config.set(args.section, 'only-new', 'yes')
-if args.force:
-    config.set(args.section, 'force', 'yes')
-if args.no_mail:
-    config.set(args.section, 'no-mail', 'yes')
-if args.mail_from:
-    config.set(args.section, 'mail-from', args.mail_from)
-if args.mail_to:
-    config.set(args.section, 'mail-to', args.mail_to)
-if args.mail_subject:
-    config.set(args.section, 'mail-subject', args.mail_subject)
-if args.smtp_host:
-    config.set(args.section, 'smtp-host', args.smtp_host)
-if args.smtp_port:
-    config.set(args.section, 'smtp-port', str(args.smtp_port))
-if args.smtp_user:
-    config.set(args.section, 'smtp-user', args.smtp_user)
-if args.smtp_password:
-    config.set(args.section, 'smtp-password', args.smtp_password)
-if args.smtp_starttls:
-    config.set(args.section, 'smtp-starttls', args.smtp_starttls)
+# Overrides anything settings given at the command line
+cli_args = {k: v for k, v in vars(args).items() if k not in {'section', 'config'} and v}
+for key, value in cli_args.items():
+    if value is True:
+        config.set(args.section, key.replace('_', '-'), 'yes')
+    else:
+        config.set(args.section, key.replace('_', '-'), value)
 
 def send_mail(config, args, stdout, stderr, context, code=0):
     # Actually send mail
