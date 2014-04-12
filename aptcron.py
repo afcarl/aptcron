@@ -198,7 +198,6 @@ if random_timerange and random_timerange.lower().strip() != 'no':
             end = now.replace(hour=end.hour, minute=end.minute)
             if end < start:
                 end = now.replace(hour=23, minute=59)
-        print(0, file=_stdout)
     except Exception as e:
         print('%s: %s' % (type(e).__name__, e), file=_stderr)
         print('%s: Could not parse time range.' % random_timerange)
@@ -213,7 +212,6 @@ if random_timerange and random_timerange.lower().strip() != 'no':
     [aptcron.extend(arg) for arg in cli_args]
 
     p = Popen(['at', time.strftime('%H:%M')], stdin=PIPE, stdout=PIPE, stderr=PIPE)
-    print(' '.join(aptcron), file=_stdout)
     stdout, stderr = p.communicate(input=' '.join(aptcron))
 
     sys.exit(0)
