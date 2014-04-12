@@ -1,0 +1,14 @@
+#! /bin/sh
+
+set -e
+
+#DEBHELPER#
+
+case "$1" in
+    configure|reconfigure)
+        rm -f /etc/cron.d/aptcron-in-the-morning
+    ;;
+esac
+
+exit 0
+
