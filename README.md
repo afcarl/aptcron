@@ -56,7 +56,7 @@ syntax and defaults can be seen in this example:
     force: no
     # Random delay: If you give a timerange (e.g. '2:00-8:00' or '-8:00',
     # execute aptcron at a random time within the given time.
-    random: no
+    random-time: no
 
     # E-Mail: Configure how the E-Mail you will receive looks like.
     # The From: header used (default: root@{host}).

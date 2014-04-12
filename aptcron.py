@@ -51,7 +51,7 @@ parser.add_argument(
     help="Read section SECTION from the config files (default: %(default)s).")
 parser.add_argument('--config', help="Use an alternative config-file.")
 parser.add_argument(
-    '--random', metavar='TIMERANGE', nargs='?', const='0:00-23:59',
+    '--random-time', metavar='TIMERANGE', nargs='?', const='0:00-23:59',
     help="Launch %(prog)s sometime in the given TIMERANGE, e.g. '2:00-8:00'. Use the special "
          "value 'no' to override any configuration files.")
 
@@ -101,7 +101,7 @@ config = configparser.ConfigParser({
     'smtp-password': '',
     'smtp-starttls': 'force',
 
-    'random': '',
+    'random-time': '',
 })
 if args.config:
     configfiles = [args.config]
@@ -179,14 +179,14 @@ if os.getuid() != 0:
     print("aptcron requires root-privileges to run.")
     send_mail(config, args, _stdout, _stderr, context, code=1)
 
-random_timerange = config.get(args.section, 'random')
+random_timerange = config.get(args.section, 'random-time')
 if random_timerange and random_timerange.lower().strip() != 'no':
     now = datetime.now().replace(second=0, microsecond=0)
     start = now.replace(minute=now.minute + 3)
     end = now.replace(hour=23, minute=59)
 
     try:
-        start_range, end_range = config.get(args.section, 'random').split('-')
+        start_range, end_range = random_timerange.split('-')
 
         if start_range:
             start = datetime.strptime(start_range, '%H:%M')
@@ -209,7 +209,7 @@ if random_timerange and random_timerange.lower().strip() != 'no':
 
     aptcron = [parser.prog]
     cli_args = [('--%s' % k.replace('_', '-'), v) for k, v in vars(args).items()
-                if k != 'random' and v != parser.get_default(k)]
+                if k != 'random_time' and v != parser.get_default(k)]
     [aptcron.extend(arg) for arg in cli_args]
 
     p = Popen(['at', time.strftime('%H:%M')], stdin=PIPE, stdout=PIPE, stderr=PIPE)
