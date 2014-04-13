@@ -10,7 +10,12 @@ Configuration options include:
 
 * Update your APT index before creating the list of updates.
 * Only list updates it hasn't already seen in the previous run.
-* Use an external SMTP mail server (including authentication and STARTTLS)
+* Delay execution to a random time within a configurable timeframe.
+* Configure E-Mail Subject/From/To including runtime variables.
+* Use an external SMTP mail server (including authentication and STARTTLS).
+
+Mails are sent to root on localhost by default. They include an `X-AptCron: Yes`
+and an `X-AptCron-Host: $hostname` header for easy filtering.
 
 Requirements
 ------------
@@ -62,6 +67,9 @@ The syntax and defaults can be seen in this example:
     random-time: no
 
     # E-Mail: Configure how the E-Mail you will receive looks like.
+    #         You can customize values using python formatting, available keys
+    #         are: {host}, {shorthost} (leftmost part of the host) and {num}
+    #         (number of packages).
     # The From: header used (default: root@{host}).
     mail-from: root@{host}
     # The To: header used (default: root@{host}).
