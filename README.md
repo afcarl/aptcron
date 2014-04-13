@@ -17,7 +17,8 @@ Requirements
 
 **aptcron** is written in Python and runs with Python2.7+, including
 Python3.2+. The only library required is python-apt, which you can install with
-`apt get install python-apt` (or python3-apt).
+`apt get install python-apt` (or python3-apt). If you want to use the
+`--random-time` parameter (see below), you need a running `at` daemon.
 
 The script sends out E-Mails with available updates (this is its primary
 purpose, after all), so you need an SMTP-server available.
@@ -79,7 +80,8 @@ The syntax and defaults can be seen in this example:
     # if STARTTLS is not available, "no" will not use STARTTLS at all:
     smtp-starttls: force
 
-There are a few parameters that can only be given via the command-line:
+A few parameters that can only be given via the command-line (for obvious
+reasons):
 
     --config CONFIG       Use an alternative config-file.
     --section SECTION     Read section SECTION from the config files (default:
@@ -87,6 +89,9 @@ There are a few parameters that can only be given via the command-line:
     --random-time [RANGE] Launch aptcron.py sometime in the given RANGE, e.g.
                           '2:00-8:00'. If no RANGE is given, execute sometime
                           between now and midnight.
+
+The `--random-time` argument will cause **aptcron** to queue itself using the
+`at` daemon. You can view execution time using the `atq` command.
 
 Cron configuration
 ------------------
