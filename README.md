@@ -33,17 +33,19 @@ repository is ready to be built with `git-buildpackage`.
 Configuration
 -------------
 
-This scripts behaviour can be configured either via the command-line (which
-always takes precedence) or via configuration files, it will parse, in order:
+The script can run fine without any configuration parameter. 
+
+The behaviour can be configured either via the command-line (which always takes
+precedence) or via configuration files, it will parse, in order:
 `/etc/aptcron.conf`, `/etc/aptcron.d/*.conf`, `./aptcron.conf` and
 `./aptcron.d/*.conf`. Files in `*.d` directories are parsed in alphabetic order.
 **aptcron** will merge all configuration files together, so you can split your
 configuration into as many files as you like.
 
-All configuration can be given in the config files or via the command-line,
-where they have to be prefixed with `--`. The script runs fine without any
-configuration directive at all, if you are happy with the defaults. The
-syntax and defaults can be seen in this example:
+Almost all configuration can be given in the config files or via the
+command-line, where they have to be prefixed with `--`. The script runs fine
+without any configuration directive at all, if you are happy with the defaults.
+The syntax and defaults can be seen in this example:
 
     [DEFAULT]
     # If set to 'yes', aptcron won't update the index:
@@ -77,13 +79,14 @@ syntax and defaults can be seen in this example:
     # if STARTTLS is not available, "no" will not use STARTTLS at all:
     smtp-starttls: force
 
-By default the the `DEFAULT` section is used, but you can use a different
-section by specifying the `--section` commandline parameter. Note that in this
-case, any settings from the `DEFAULT` section still take precedence over the
-programs defaults.
+There are a few parameters that can only be given via the command-line:
 
-If you are not happy with the list of config files, specify a single config
-file to be used instead with the `--config` parameter.
+    --config CONFIG       Use an alternative config-file.
+    --section SECTION     Read section SECTION from the config files (default:
+                          DEFAULT)
+    --random-time [RANGE] Launch aptcron.py sometime in the given RANGE, e.g.
+                          '2:00-8:00'. If no RANGE is given, execute sometime
+                          between now and midnight.
 
 Cron configuration
 ------------------
