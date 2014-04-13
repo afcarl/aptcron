@@ -51,9 +51,9 @@ parser.add_argument(
     help="Read section SECTION from the config files (default: %(default)s).")
 parser.add_argument('--config', help="Use an alternative config-file.")
 parser.add_argument(
-    '--random-time', metavar='TIMERANGE', nargs='?', const='0:00-23:59',
-    help="Launch %(prog)s sometime in the given TIMERANGE, e.g. '2:00-8:00'. Use the special "
-         "value 'no' to override any configuration files.")
+    '--random-time', metavar='RANGE', nargs='?', const='0:00-23:59',
+    help="Launch %(prog)s sometime in the given RANGE, e.g. '2:00-8:00'. If no RANGE is "
+         "given, execute sometime between now and midnight.")
 
 mail_parser = parser.add_argument_group(
     'E-Mail', 'Configure how the E-Mail you will receive looks like.')
