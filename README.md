@@ -63,14 +63,13 @@ configuration file:
     no-mail: yes
     # Set to "yes" to send an E-Mail even if no packages are found:
     force: no
-    # Random delay: If you give a timerange (e.g. '2:00-8:00' or '-8:00',
-    # execute aptcron at a random time within the given time.
+    # Random delay: If you give a timerange (e.g. '2:00-8:00' or '-8:00', execute aptcron at a
+    # random time within the given time.
     random-time: no
 
-    # E-Mail: Configure how the E-Mail you will receive looks like.
-    #         You can customize values using python formatting, available keys
-    #         are: {host}, {shorthost} (leftmost part of the host) and {num}
-    #         (number of packages).
+    # E-Mail: Configure how the E-Mail you will receive looks like. You can customize values using
+    #         python formatting, available keys are:
+    #         {host}, {shorthost} (leftmost part of the host) and {num} (number of packages).
     # The From: header used (default: root@{host}).
     mail-from: root@{host}
     # The To: header used (default: root@{host}).
@@ -93,11 +92,9 @@ A few parameters that can only be given via the command-line (for obvious
 reasons):
 
     --config CONFIG       Use an alternative config-file.
-    --section SECTION     Read section SECTION from the config files (default:
-                          DEFAULT)
-    --random-time [RANGE] Launch aptcron.py sometime in the given RANGE, e.g.
-                          '2:00-8:00'. If no RANGE is given, execute sometime
-                          between now and midnight.
+    --section SECTION     Read section SECTION from the config files (default: DEFAULT)
+    --random-time [RANGE] Launch aptcron.py sometime in the given RANGE, e.g. '2:00-8:00'. If 
+                          no RANGE is given, execute sometime between now and midnight.
 
 The `--random-time` argument will cause **aptcron** to queue itself using the
 `at` daemon, any other commandline arguments will be passed to the delayed
