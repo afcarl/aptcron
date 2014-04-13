@@ -1,3 +1,10 @@
+aptcron (0.0.7) unstable; urgency=low
+  
+  * Fix the random-time parameter (was broken due to migration to cli-only
+    parameter).
+
+ -- Mathias Ertl <mati@er.tl>  Sun, 13 Apr 2014 20:19:37 +0200
+
 aptcron (0.0.6) unstable; urgency=low
   
   * The --random-time parameter is now a cli-only parameter.
