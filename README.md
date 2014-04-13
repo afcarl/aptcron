@@ -39,7 +39,8 @@ repository is ready to be built with `git-buildpackage`.
 Configuration
 -------------
 
-The script can run fine without any configuration parameter. 
+The script runs fine without any custom configuration, if you are happy with
+the defaults.
 
 The behaviour can be configured either via the command-line (which always takes
 precedence) or via configuration files, it will parse, in order:
@@ -48,10 +49,10 @@ precedence) or via configuration files, it will parse, in order:
 **aptcron** will merge all configuration files together, so you can split your
 configuration into as many files as you like.
 
-Almost all configuration can be given in the config files or via the
-command-line, where they have to be prefixed with `--`. The script runs fine
-without any configuration directive at all, if you are happy with the defaults.
-The syntax and defaults can be seen in this example:
+Almost every configuration option can be given in the config files or via the
+command-line, where they have to be prefixed with `--`.  The syntax, available
+configuration options and their default values can be seen in this example
+configuration file:
 
     [DEFAULT]
     # If set to 'yes', aptcron won't update the index:
@@ -99,7 +100,8 @@ reasons):
                           between now and midnight.
 
 The `--random-time` argument will cause **aptcron** to queue itself using the
-`at` daemon. You can view execution time using the `atq` command.
+`at` daemon, any other commandline arguments will be passed to the delayed
+invocation. You can view the execution time using the `atq` command.
 
 Cron configuration
 ------------------
