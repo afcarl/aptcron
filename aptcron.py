@@ -100,8 +100,6 @@ config = configparser.ConfigParser({
     'smtp-user': '',
     'smtp-password': '',
     'smtp-starttls': 'force',
-
-    'random-time': '',
 })
 if args.config:
     configfiles = [args.config]
@@ -179,14 +177,13 @@ if os.getuid() != 0:
     print("aptcron requires root-privileges to run.")
     send_mail(config, args, _stdout, _stderr, context, code=1)
 
-random_timerange = config.get(args.section, 'random-time')
-if random_timerange and random_timerange.lower().strip() != 'no':
+if args.random_time:
     now = datetime.now().replace(second=0, microsecond=0)
     start = now.replace(minute=now.minute + 3)
     end = now.replace(hour=23, minute=59)
 
     try:
-        start_range, end_range = random_timerange.split('-')
+        start_range, end_range = args.random_timerange.split('-')
 
         if start_range:
             start = datetime.strptime(start_range, '%H:%M')
@@ -200,7 +197,7 @@ if random_timerange and random_timerange.lower().strip() != 'no':
                 end = now.replace(hour=23, minute=59)
     except Exception as e:
         print('%s: %s' % (type(e).__name__, e), file=_stderr)
-        print('%s: Could not parse time range.' % random_timerange)
+        print('%s: Could not parse time range.' % args.random_timerange)
         send_mail(config, args, _stdout, _stderr, context, code=2)
 
     random.seed()
