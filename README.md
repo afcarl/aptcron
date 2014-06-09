@@ -57,19 +57,23 @@ configuration file:
     [DEFAULT]
     # If set to 'yes', aptcron won't update the index:
     no-update: no
+    # If set to 'yes', aptcron will only list packages that wouldn't install any
+    # new dependencies.
+    no-dist-upgrade: no
     # If set to 'yes', aptcron only lists updates it hasn't seen previously:
     only-new: no
     # Do not send mail, just print to stdout:
     no-mail: yes
     # Set to "yes" to send an E-Mail even if no packages are found:
     force: no
-    # Random delay: If you give a timerange (e.g. '2:00-8:00' or '-8:00', execute aptcron at a
-    # random time within the given time.
+    # Random delay: If you give a timerange (e.g. '2:00-8:00' or '-8:00', execute
+    # aptcron at a random time within the given time.
     random-time: no
 
-    # E-Mail: Configure how the E-Mail you will receive looks like. You can customize values using
-    #         python formatting, available keys are:
+    # E-Mail: Configure how the E-Mail you will receive looks like. You can
+    #         customize values using python formatting, available keys are:
     #         {host}, {shorthost} (leftmost part of the host) and {num} (number of packages).
+    #
     # The From: header used (default: root@{host}).
     mail-from: root@{host}
     # The To: header used (default: root@{host}).

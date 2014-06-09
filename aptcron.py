@@ -39,6 +39,8 @@ parser = argparse.ArgumentParser(
     description="List APT updates via cron, optionally installing them.")
 parser.add_argument('--no-update', action='store_true',
                     help='Do not update the package index.')
+parser.add_argument('--no-dist-upgrade', action='store_true',
+                    help="No apt-get dist-upgrade (don't list packages with new dependencies).")
 parser.add_argument('--only-new', action='store_true',
                     help="Only list new package updates.")
 parser.add_argument('--no-mail', action='store_true',
@@ -87,6 +89,7 @@ context = {
 # Read configuration files:
 config = configparser.ConfigParser({
     'no-update': 'no',
+    'no-dist-upgrade': 'no',
     'only-new': 'no',
     'force': 'no',
     'no-mail': 'no',
@@ -223,7 +226,7 @@ try:
 
     # list upgradeable packages
     cache.open(None)
-    cache.upgrade()
+    cache.upgrade(dist_upgrade=not config.getboolean(args.section, 'no-dist-upgrade'))
 
     packages = [(p.name, p.versions[1].version, p.versions[0].version) for p in cache.get_changes()]
     context['num'] = len(packages)  # update context with number of updates
