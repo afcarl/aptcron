@@ -183,7 +183,7 @@ if args.random_time:
     end = now.replace(hour=23, minute=59)
 
     try:
-        start_range, end_range = args.random_timerange.split('-')
+        start_range, end_range = args.random_time.split('-')
 
         if start_range:
             start = datetime.strptime(start_range, '%H:%M')
@@ -197,7 +197,7 @@ if args.random_time:
                 end = now.replace(hour=23, minute=59)
     except Exception as e:
         print('%s: %s' % (type(e).__name__, e), file=_stderr)
-        print('%s: Could not parse time range.' % args.random_timerange)
+        print('%s: Could not parse time range.' % args.random_time)
         send_mail(config, args, _stdout, _stderr, context, code=2)
 
     random.seed()
