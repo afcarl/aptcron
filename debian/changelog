@@ -1,3 +1,11 @@
+aptcron (0.0.8) unstable; urgency=low
+
+  * Fix fixed-time crontab
+  * Enable dist-upgrade by default.
+  * Add no-dist-upgrade parameter.
+
+ -- Mathias Ertl <mati@er.tl>  Mon, 09 Jun 2014 19:43:12 +0200
+
 aptcron (0.0.7) unstable; urgency=low
   
   * Fix the random-time parameter (was broken due to migration to cli-only
