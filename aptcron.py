@@ -257,7 +257,7 @@ try:
             print('* %s: %s -> Will be newly installed' % (name, new))
         elif pkg.marked_downgrade:
             print('* %s: %s -> %s - Will be newly downgraded' % (name, new, old))
-        else:
+        else:  # most common case: a simple package upgrade
             print('* %s: %s -> %s' % (name, new, old))
 
     if config.getboolean(args.section, 'only-new'):
