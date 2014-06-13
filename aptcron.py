@@ -165,7 +165,9 @@ def send_mail(config, args, stdout, stderr, context, code=0):
             s.sendmail(msg['From'], [msg['To']], msg.as_string())
             s.quit()
         except Exception as e:
-            print('%s: %s' % (type(e).__name__, e), file=stderr)
+            exc_type, exc_obj, exc_tb = sys.exc_info()
+            fname = os.path.split(exc_tb.tb_frame.f_code.co_filename)[1]
+            print('%s:%s: %s: %s' % (fname, exc_tb.tb_lineno, type(e).__name__, e))
             code = 2
 
     sys.exit(code)
@@ -199,7 +201,9 @@ if args.random_time:
             if end < start:
                 end = now.replace(hour=23, minute=59)
     except Exception as e:
-        print('%s: %s' % (type(e).__name__, e), file=_stderr)
+        exc_type, exc_obj, exc_tb = sys.exc_info()
+        fname = os.path.split(exc_tb.tb_frame.f_code.co_filename)[1]
+        print('%s:%s: %s: %s' % (fname, exc_tb.tb_lineno, type(e).__name__, e))
         print('%s: Could not parse time range.' % args.random_time)
         send_mail(config, args, _stdout, _stderr, context, code=2)
 
@@ -268,7 +272,10 @@ try:
         print("\nPlease update all packages at your earliest convenience.")
 
     # finally send a mail on success
+    raise Exception("foobar")
     send_mail(config, args, _stdout, _stderr, context)
 except Exception as e:
-    print('%s: %s' % (type(e).__name__, e))
+    exc_type, exc_obj, exc_tb = sys.exc_info()
+    fname = os.path.split(exc_tb.tb_frame.f_code.co_filename)[1]
+    print('%s:%s: %s: %s' % (fname, exc_tb.tb_lineno, type(e).__name__, e))
     send_mail(config, args, _stdout, _stderr, context, code=1)
