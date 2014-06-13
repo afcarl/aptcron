@@ -3,6 +3,7 @@ aptcron (0.0.9) unstable; urgency=low
   * Fix IndexError on new packages/packages that are to be deleted.
   * Account for newly installed, removed and downgraded packages.
   * Print filename and exception line in catchall-statements.
+  * Honour no-mail option in config-file not only on command-line.
   * Minor pep8 coding standard fixes.
 
  -- Mathias Ertl <mati@er.tl>  Mon, 09 Jun 2014 19:43:12 +0200

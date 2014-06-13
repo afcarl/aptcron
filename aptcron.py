@@ -113,7 +113,8 @@ else:
 config.read(configfiles)
 
 # Overrides anything settings given at the command line
-cli_args = {k: v for k, v in vars(args).items() if k not in {'section', 'config'} and v}
+cli_only_args = {'section', 'config'}
+cli_args = {k: v for k, v in vars(args).items() if k not in cli_only_args and v}
 for key, value in cli_args.items():
     if value is True:
         config.set(args.section, key.replace('_', '-'), 'yes')
@@ -130,7 +131,7 @@ def timerange(start, end):
 
 def send_mail(config, args, stdout, stderr, context, code=0):
     # Actually send mail
-    if args.no_mail:
+    if config.getboolean(args.section, no_mail):
         print(sys.stdout.getvalue().strip(), file=stdout)
     else:
         try:
@@ -275,7 +276,6 @@ try:
         print("\nPlease update all packages at your earliest convenience.")
 
     # finally send a mail on success
-    raise Exception("foobar")
     send_mail(config, args, _stdout, _stderr, context)
 except Exception as e:
     exc_type, exc_obj, exc_tb = sys.exc_info()
