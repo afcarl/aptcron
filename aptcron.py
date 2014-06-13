@@ -246,7 +246,15 @@ try:
         print("No packages found.")
 
     for name, new, old in packages:
-        print('* %s: %s -> %s' % (name, new, old))
+        pkg = cache[name]
+        if pkg.marked_delete:
+            print('* %s: %s -> Will be removed' % (name, new))
+        elif pkg.marked_install:
+            print('* %s: %s -> Will be newly installed' % (name, new))
+        elif pkg.marked_downgrade:
+            print('* %s: %s -> %s - Will be newly downgraded' % (name, new, old))
+        else:
+            print('* %s: %s -> %s' % (name, new, old))
 
     if config.getboolean(args.section, 'only-new'):
         if not os.path.exists(CACHE_DIR):

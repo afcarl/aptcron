@@ -1,6 +1,7 @@
 aptcron (0.0.9) unstable; urgency=low
 
   * Fix IndexError on new packages/packages that are to be deleted.
+  * Account for newly installed, removed and downgraded packages.
 
  -- Mathias Ertl <mati@er.tl>  Mon, 09 Jun 2014 19:43:12 +0200
 
