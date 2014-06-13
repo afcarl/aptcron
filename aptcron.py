@@ -113,7 +113,7 @@ else:
 config.read(configfiles)
 
 # Overrides anything settings given at the command line
-cli_only_args = {'section', 'config'}
+cli_only_args = {'section', 'config', 'random_time'}
 cli_args = {k: v for k, v in vars(args).items() if k not in cli_only_args and v}
 for key, value in cli_args.items():
     if value is True:
