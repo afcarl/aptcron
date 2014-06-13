@@ -74,7 +74,8 @@ smtp_parser.add_argument('--smtp-user', metavar='USER',
                          help='The SMTP user to use (default: no user).')
 smtp_parser.add_argument('--smtp-password', metavar='PWD',
                          help='The SMTP password to use (default: no password).')
-smtp_parser.add_argument('--smtp-starttls', choices=['no', 'yes', 'force'],
+smtp_parser.add_argument(
+    '--smtp-starttls', choices=['no', 'yes', 'force'],
     help='Wether to use STARTTLS. "yes" will use it if available, "force" will fail if STARTTLS '
          'is not available (default: force).')
 args = parser.parse_args()
@@ -119,11 +120,13 @@ for key, value in cli_args.items():
     else:
         config.set(args.section, key.replace('_', '-'), value)
 
+
 def timerange(start, end):
     stamp = start
     while stamp <= end:
         yield stamp
         stamp = stamp + timedelta(minutes=1)
+
 
 def send_mail(config, args, stdout, stderr, context, code=0):
     # Actually send mail
@@ -222,7 +225,7 @@ if args.random_time:
 
 try:
     # initialize cache:
-    cache=apt.Cache()
+    cache = apt.Cache()
 
     # update the APT cache:
     if not config.getboolean(args.section, 'no-update'):
