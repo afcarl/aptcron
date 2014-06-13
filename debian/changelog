@@ -1,3 +1,9 @@
+aptcron (0.0.9.1) unstable; urgency=low
+
+  * Fix the no-mail option.
+
+ -- Mathias Ertl <mati@er.tl>  Fri, 13 Jun 2014 14:06:26 +0200
+
 aptcron (0.0.9) unstable; urgency=low
 
   * Fix IndexError on new packages/packages that are to be deleted.

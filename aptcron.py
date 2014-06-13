@@ -131,7 +131,7 @@ def timerange(start, end):
 
 def send_mail(config, args, stdout, stderr, context, code=0):
     # Actually send mail
-    if config.getboolean(args.section, no_mail):
+    if config.getboolean(args.section, 'no-mail'):
         print(sys.stdout.getvalue().strip(), file=stdout)
     else:
         try:
