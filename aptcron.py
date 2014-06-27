@@ -236,7 +236,11 @@ try:
     cache.open(None)
     cache.upgrade(dist_upgrade=not config.getboolean(args.section, 'no-dist-upgrade'))
 
-    packages = [(p.name, p.candidate.version, p.installed.version) for p in cache.get_changes()]
+    packages = [(
+        p.name,
+        p.candidate.version if p.candidate else None,
+        p.installed.version if p.installed else None,
+    ) for p in cache.get_changes()]
     context['num'] = len(packages)  # update context with number of updates
 
     seen = []
