@@ -1,3 +1,10 @@
+aptcron (0.0.10) unstable; urgency=low
+
+  * Fix output for newly installed packages.
+  * Improve output for new/downgraded/removed packages.
+
+ -- Mathias Ertl <mati@er.tl>  Fri, 27 Jun 2014 14:51:09 +0200
+
 aptcron (0.0.9.1) unstable; urgency=low
 
   * Fix the no-mail option.
