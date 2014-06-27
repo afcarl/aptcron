@@ -264,7 +264,7 @@ try:
         elif pkg.marked_install:
             print('* %s: NEW package: %s' % (name, new))
         elif pkg.marked_downgrade:
-            print('* %s: %s -> %s - Will be newly downgraded' % (name, new, old))
+            print('* %s: DOWNGRADE: %s -> %s' % (name, new, old))
         else:  # most common case: a simple package upgrade
             print('* %s: %s -> %s' % (name, new, old))
 
