@@ -260,9 +260,9 @@ try:
     for name, new, old in packages:
         pkg = cache[name]
         if pkg.marked_delete:
-            print('* %s: %s -> Will be removed' % (name, new))
+            print('* %s: Package will be REMOVED (%s)' % (name, new))
         elif pkg.marked_install:
-            print('* %s: %s -> Will be newly installed' % (name, new))
+            print('* %s: NEW package: %s' % (name, new))
         elif pkg.marked_downgrade:
             print('* %s: %s -> %s - Will be newly downgraded' % (name, new, old))
         else:  # most common case: a simple package upgrade
