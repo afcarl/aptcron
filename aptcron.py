@@ -236,13 +236,13 @@ try:
     cache.open(None)
     cache.upgrade(dist_upgrade=not config.getboolean(args.section, 'no-dist-upgrade'))
 
-    packages = [(p.name, p.candidate.version, p.installed.version) for p in cache.get_changes()]
+    packages = [(pkg.name, pkg.candidate.version, pkg.installed.version) for pkg in cache.get_changes()]
     context['num'] = len(packages)  # update context with number of updates
 
     seen = []
     if config.getboolean(args.section, 'only-new') and os.path.exists(SEEN_CACHE):
         seen = pickle.load(open(SEEN_CACHE))
-        packages = [p for p in packages if p not in seen]
+        packages = [pkg for pkg in packages if pkg not in seen]
 
     if packages:
         if config.getboolean(args.section, 'only-new') and seen:
