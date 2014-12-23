@@ -260,9 +260,9 @@ try:
         elif pkg.marked_install:
             print('* %s: %s -> Will be newly installed' % (name, new))
         elif pkg.marked_downgrade:
-            print('* %s: %s -> %s - Will be newly downgraded' % (name, new, old))
+            print('* %s: %s -> %s - Will be newly downgraded' % (name, old, new))
         else:  # most common case: a simple package upgrade
-            print('* %s: %s -> %s' % (name, new, old))
+            print('* %s: %s -> %s' % (name, old, new))
 
     if config.getboolean(args.section, 'only-new'):
         if not os.path.exists(CACHE_DIR):
